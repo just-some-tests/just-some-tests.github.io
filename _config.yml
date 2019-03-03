@@ -14,7 +14,7 @@ paginate: 3
 links:
   - title: "about"
     url: /about
-  - title: "git"
+  - title: "github"
     url: http://github.com/just-some-tests
   - title: "rss"
     url: /feed.xml
