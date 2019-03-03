@@ -2,7 +2,7 @@
 title: "Hello,World!"
 description: "So I was feeling nostalgic."
 baseurl: ""
-url: "http://just-some-tests.github.io/"
+url: "http://just-some-tests.github.io/test/"
 
 # Build settings
 markdown: kramdown
