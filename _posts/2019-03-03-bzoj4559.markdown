@@ -1,0 +1,122 @@
+---
+layout: post
+title:  "Welcome to Jekyll!"
+date:   2019-03-23 20:02:27
+categories: bzoj
+---
+
+首先，运用一发容斥原理，求出所有人与B神每门课分数相对关系的不同方案数。
+
+这个似乎大（wo）家（lan）都（de）会（hui）了（yi），我就不说了，详见代码里的f。
+
+然后，我们就需要计算每门课每个人的分数的方案数。对于每一门课，我们分别计算，然后把它们乘起来。
+
+方便起见，令总分为s，名次为rk。
+
+设B神的分数为x，则方案数为x^(n-rk)*(s-x)^(rk-1)
+
+展开得到c(rk-1,0)*s^(rk-1)*x^(n-rk)-c(rk-1,1)*s^(rk-2)*x^(n-rk+1)+c(rk-1,2)*s^(rk-3)*x^(n-rk+2)-........
+
+显然，我们需要对于x=1..s的所有情况求和。
+
+我们把x次数相同的项放在一起，进行一波整理，问题就转化成了求1^k+2^k+...+s^k
+
+我们设g(k)=1^k+2^k+...+s^k，我们列出一波式子然后观察：
+
+(s+1)^k-s^k=c(k,1)*s^(k-1)     +c(k,2)*s^(k-2)     +...+c(k,k)*s^0
+
+ s^k-(s-1)^k=c(k,1)*(s-1)^(k-1)+c(k,2)*(s-1)^(k-2)+...+c(k,k)*(s-1)^0
+
+............................................................................................................
+
+      2^k-1^k=c(k,1)*1^(k-1)     +c(k,2)*1^(k-2)     +...+c(k,k)*1^0
+
+把这些式子全部相加，得到：
+
+(s+1)^k-1=c(k,1)*g(k-1)+c(k,2)*g(k-2)+...+c(k,k)*g(0)
+
+于是就可以通过递推的方式求出g
+
+然后就做完了。
+
+```cpp
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <cstdlib>
+#include <algorithm>
+#define ll long long
+#define N 103
+#define P 1000000007
+using namespace std;
+inline int read()
+{
+	int ret=0;char ch=getchar();
+	while (ch<'0'||ch>'9') ch=getchar();
+	while ('0'<=ch&&ch<='9')
+	{
+		ret=ret*10-48+ch;
+		ch=getchar();
+	}
+	return ret;
+}
+int fast_pow(int x,int y)
+{
+	int ret=1;
+	while (y)
+	{
+		if (y&1) ret=(ll)ret*x%P;
+		x=(ll)x*x%P;
+		y=y>>1;
+	}
+	return ret;
+}
+int bin[N];
+int fact[N*100];
+int inv[N*100];
+int c(int n,int m)
+{
+	return (ll)fact[n]*inv[m]%P*inv[n-m]%P;
+}
+int f[N],g[N];
+int person,subject,K;
+int rank[N],s[N];
+int main()
+{
+	for (int i=fact[0]=1;i<=1e3;++i) fact[i]=(ll)fact[i-1]*i%P;
+	for (int i=0;i<=1e3;++i) inv[i]=fast_pow(fact[i],P-2);
+	person=read();subject=read();K=read();
+	for (int i=1;i<=subject;++i) s[i]=read();
+	int maxrank=0;
+	for (int i=1;i<=subject;++i) maxrank=max(maxrank,rank[i]=read());
+	for (int i=person-maxrank;i>=K;--i)
+	{
+		f[i]=c(person-1,i);
+		for (int j=1;j<=subject;++j)
+			f[i]=(ll)f[i]*c(person-1-i,rank[j]-1)%P;
+		for (int j=person-maxrank;j>i;--j)
+			(f[i]+=P-(ll)f[j]*c(j,i)%P)%=P;
+	}
+	int res=1;
+	for (int i=1;i<=subject;++i)
+	{
+		g[0]=s[i];
+		bin[0]=1;
+		for (int j=1;j<=person;++j)
+		{
+			bin[j]=(ll)bin[j-1]*s[i]%P;
+			g[j]=fast_pow(s[i]+1,j+1)-1;
+			for (int k=1;k<=j;++k)
+				(g[j]+=P-(ll)c(j+1,k+1)*g[j-k]%P)%=P;
+			g[j]=(ll)g[j]*fast_pow(c(j+1,1),P-2)%P;
+		}
+		int now=0;
+		for (int j=0,k=1;j<rank[i];++j,k=-k)
+			(now+=((ll)k+P)*c(rank[i]-1,j)%P*g[person-rank[i]+j]%P*bin[rank[i]-j-1]%P)%=P;
+		res=(ll)res*now%P;
+	}
+	printf("%lld\n",(ll)res*f[K]%P);
+	return 0;
+}
+```
