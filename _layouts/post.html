@@ -12,5 +12,21 @@ layout: default
   <article class="post-content">
   {{ content }}
   </article>
+  
+  <div id="gitmentContainer"></div>
+<link rel="stylesheet" href="https://jjeejj.github.io/css/gitment.css">
+<script src="https://jjeejj.github.io/js/gitment.js"></script>
+<script>
+var gitment = new Gitment({
+    id: '{{ page.title }}',
+    owner: 'just-some-tests',
+    repo: 'just-some-tests.github.io',
+    oauth: {
+        client_id: '0ab3c28b495f6a0bf35a',
+        client_secret: '79a749c24b73c32cb361e3a9b2fd36f7e293d813',
+    },
+});
+gitment.render('gitmentContainer');
+</script>
 
 </div>
