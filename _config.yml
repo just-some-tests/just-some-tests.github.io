@@ -12,6 +12,8 @@ paginate: 3
 
 # Links
 links:
+  - title: "home"
+    url: /
   - title: "about"
     url: /about
   - title: "github"
