@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "P1349 广义斐波那契数列"
-date:   2019-03-04 22:48:50
+title:  "P3188 [HNOI2007]梦幻岛宝珠"
+date:   2019-03-10 21:34:59
 categories: 洛谷
 ---
 
