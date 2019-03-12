@@ -26,7 +26,7 @@ title: Home
         <a class="page-link" href="{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}">←上一页</a>
       {% endif %}
     {% else %}
-      <span class="page-link">prv</span>
+      <span class="page-link">←上一页</span>
     {% endif %}
 
     {% if paginator.next_page %}
